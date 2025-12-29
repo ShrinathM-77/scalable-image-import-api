@@ -29,5 +29,10 @@ app.get("/health", (req, res) => {
    Routes
 ========================= */
 app.use("/api/import", importRoutes);
+app.get("/", (req, res) => {
+  res.send("🚀 Scalable Image Import API is running");
+});
+
 
 export default app;
+
