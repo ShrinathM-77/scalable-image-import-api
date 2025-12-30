@@ -1,23 +1,15 @@
 import pkg from "pg";
 const { Pool } = pkg;
 
+if (!process.env.DATABASE_URL) {
+  throw new Error("❌ DATABASE_URL is missing");
+}
+
 const pool = new Pool({
-  host: process.env.PGHOST,
-  user: process.env.PGUSER,
-  password: process.env.PGPASSWORD,
-  database: process.env.PGDATABASE,
-  port: process.env.PGPORT,
+  connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
   },
-});
-
-pool.on("connect", () => {
-  console.log("✅ PostgreSQL connected");
-});
-
-pool.on("error", (err) => {
-  console.error("❌ PostgreSQL error", err);
 });
 
 export default pool;
