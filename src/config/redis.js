@@ -1,17 +1,19 @@
 import Redis from "ioredis";
 
-if (!process.env.REDIS_URL) {
-  console.error("❌ REDIS_URL is missing in environment variables");
-  process.exit(1);
+let redis;
+
+if (process.env.REDIS_PUBLIC_URL) {
+  // ✅ Railway Redis
+  redis = new Redis(process.env.REDIS_PUBLIC_URL);
+  console.log("✅ Using Railway Redis");
+} else {
+  // ✅ Local Redis (development)
+  redis = new Redis("redis://127.0.0.1:6379");
+  console.log("⚠️ Using Local Redis");
 }
 
-const redis = new Redis(process.env.REDIS_URL, {
-  maxRetriesPerRequest: null,
-  enableReadyCheck: false,
-});
-
 redis.on("connect", () => {
-  console.log("✅ Redis connected (Railway)");
+  console.log("✅ Redis connected");
 });
 
 redis.on("error", (err) => {
