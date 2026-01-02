@@ -37,6 +37,33 @@ router.get("/list", async (req, res) => {
   }
 });
 
+/**
+ * 🖼 GET /api/import/:id/images
+ * Returns images for a specific import
+ */
+router.get("/:id/images", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await pool.query(
+      "SELECT id, image_url FROM images WHERE import_id = $1 ORDER BY id DESC",
+      [id]
+    );
+
+    res.json({
+      status: "OK",
+      data: result.rows,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "ERROR",
+      message: "Failed to fetch images",
+    });
+  }
+});
+
+
 
 /**
  * 🚀 POST /api/import/google-drive
